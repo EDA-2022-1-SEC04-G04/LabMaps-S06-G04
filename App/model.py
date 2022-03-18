@@ -113,6 +113,12 @@ def newCatalog():
                                  comparefunction=compareMapYear)
 
     # TODO modificaciones para el laboratorio 6
+    
+    catalog['title'] = mp.newMap(10000,  
+                                 maptype='CHAINING',
+                                 loadfactor=4,
+                                 comparefunction=compareTitles)
+    
     """
     Este indice crea un map cuya llave es el titulo del libro
     La columna 'title' del archivo books.csv
@@ -266,7 +272,17 @@ def addBookTitle(catalog, title):
     """
     Completar la descripcion de addBookTitle
     """
-    pass
+    bookTitle = title['title']
+    tagid = title['tag_id']
+    entry = mp.get(catalog['tagIds'], tagid)
+
+    if entry:
+        tagbook = mp.get(catalog['title'], me.getValue(entry)['name'])
+        tagbook['value']['total_books'] += 1
+        tagbook['value']['count'] += int(title['count'])
+        book = mp.get(catalog['bookIds'], bookTitle)
+        if book:
+            lt.addLast(tagbook['value']['books'], book['value'])
 
 
 # ==============================
@@ -306,6 +322,12 @@ def getBooksByYear(catalog, year):
 
 
 def getBookByTitle(catalog, title):
+    
+    title = mp.get(catalog['title'], title)
+    if title:
+        return me.getValue(title)['title']
+    return None
+    
     # TODO modificaciones para el laboratorio 6
     """
     Completar la descripcion de getBookByTitle
@@ -339,7 +361,8 @@ def titlesSize(catalog):
     """
     Completar la descripcion de titlesSize
     """
-    pass
+    return mp.size[catalog['title']]
+    
 
 
 # ==============================
@@ -427,8 +450,15 @@ def compareYears(year1, year2):
 
 
 def compareTitles(title1, title2):
+    if (int(title1) == int(title2)):
+        return 0
+    elif (int(title1) > int(title2)):
+        return 1
+    else:
+        return 0 
+    
+
     # TODO modificaciones para el laboratorio 6
     """
     Completar la descripcion de compareTitles
     """
-    pass
